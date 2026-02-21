@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💌 for you · maroon polaroid love</title>
+    <!-- Link to external CSS (completely separate file) -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="love-letter" id="loveLetter">
+        <!-- STAGE 1: DO YOU WANT TO OPEN? (visible initially) -->
+        <div id="stagePrompt" class="click-prompt">
+            <div class="prompt-text">📸 do you want to open?</div>
+            <div class="prompt-sub">click anywhere →</div>
+        </div>
+
+        <!-- STAGE 2: ENVELOPE (hidden initially) -->
+        <div id="stageEnvelope" class="envelope-stage hidden">
+            <div id="envelopeClick" class="envelope-icon"></div>
+            <div class="envelope-label">💘 tap the envelope 💘</div>
+        </div>
+
+        <!-- STAGE 3: PAPER WITH POLAROIDS & MESSAGE (hidden) -->
+        <div id="stagePaper" class="paper-stage hidden">
+            <div class="message-paper">
+                <!-- left side: three polaroid pictures -->
+                <div class="polaroid-side">
+                    <!-- polaroid 1 - just paste your image name in "src" -->
+                    <div class="polaroid">
+                        <img class="polaroid-img" src="https://uploads.onecompiler.io/43b6p73c4/44e89f69p/333.jpg" alt="you + me" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 fill=%22%23a75c5c%22/><text x=%2260%22 y=%2260%22 font-size=%2232%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff2e3%22>💕</text></svg>'">
+                        <div class="polaroid-caption">you + me</div>
+                    </div>
+                    <!-- polaroid 2 - just paste your image name in "src" -->
+                    <div class="polaroid">
+                        <img class="polaroid-img" src="https://uploads.onecompiler.io/43b6p73c4/44dvdqjc9/2891.jpg" alt="sweet times" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 fill=%22%23a75c5c%22/><text x=%2260%22 y=%2260%22 font-size=%2232%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff2e3%22>✨</text></svg>'">
+                        <div class="polaroid-caption">sweet times</div>
+                    </div>
+                    <!-- polaroid 3 - just paste your image name in "src" -->
+                    <div class="polaroid">
+                        <img class="polaroid-img" src="https://uploads.onecompiler.io/43b6p73c4/44dvdqjc9/3005.jpg" alt="always us" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 fill=%22%23a75c5c%22/><text x=%2260%22 y=%2260%22 font-size=%2232%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff2e3%22>🥰</text></svg>'">
+                        <div class="polaroid-caption">always us</div>
+                    </div>
+                </div>
+
+                <!-- right side: maroon themed message -->
+                <div class="message-side">
+                    <div class="message-text">
+                        <strong>Good morning, my love</strong>
+                        I hope you woke up feeling strong, happy, and ready to take on the day. Just a little reminder that you mean so much to me. Thinking about you already makes my morning brighter. <br>
+                        No matter how busy today gets, don’t forget that someone here is always cheering for you, believing in you, and caring about you so much. I’m so proud of the person you are.
+                        Have an amazing day, okay? I can’t wait to talk to you later. 💕
+                        <p>thank you for being you. 🤎</p>
+                        <div class="heart-sign">♡ yours forever</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden YouTube player for background music (autoplay when message opens) -->
+    <div id="youtube-player-container" style="position: fixed; bottom: -100px; left: -100px; width: 0; height: 0; opacity: 0; pointer-events: none;">
+        <div id="youtube-player"></div>
+    </div>
+
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- main interaction script -->
+    <script>
+        // 🎵 YOUR SPECIFIC YOUTUBE LINK IS HERE 👇
+        const YOUTUBE_VIDEO_URL = 'https://youtu.be/XfkffghZsTM?si=v8gvHUee12z_abZ3';
+        
+        // Function to extract video ID from various YouTube URL formats
+        function extractVideoId(url) {
+            if (!url) return 'XfkffghZsTM'; // fallback to your video ID
+            
+            // Regular expressions for different YouTube URL formats
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/watch\?.*&v=)([^&\n?#]+)/,
+                /youtube\.com\/shorts\/([^&\n?#]+)/
+            ];
+            
+            for (let pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            
+            // If no pattern matches, try to extract from URL params
+            try {
+                const urlObj = new URL(url);
+                const videoId = urlObj.searchParams.get('v');
+                if (videoId) return videoId;
+            } catch (e) {
+                // Invalid URL, return default
+                console.log('Invalid YouTube URL, using default');
+            }
+            
+            return 'XfkffghZsTM'; // your video ID as default
+        }
+
+        // Get the video ID from the provided URL
+        const VIDEO_ID = extractVideoId(YOUTUBE_VIDEO_URL);
+        console.log('🎵 Using YouTube video ID:', VIDEO_ID);
+
+        // YouTube player variables
+        var ytPlayer;
+        var musicStarted = false;
+
+        // This function is called when YouTube API is ready
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: VIDEO_ID,
+                playerVars: {
+                    'autoplay': 0, // we'll start manually when message opens
+                    'controls': 0,
+                    'disablekb': 1,
+                    'enablejsapi': 1,
+                    'fs': 0,
+                    'loop': 1,
+                    'playlist': VIDEO_ID, // same as videoId for looping
+                    'rel': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('YouTube player ready');
+        }
+
+        function onPlayerStateChange(event) {
+            // Optional: handle state changes
+        }
+
+        // Function to start music (called when paper is revealed)
+        function startBackgroundMusic() {
+            if (ytPlayer && !musicStarted) {
+                ytPlayer.playVideo();
+                musicStarted = true;
+                console.log('🎵 Background music started');
+            }
+        }
+
+        // Original interaction logic with music trigger
+        (function() {
+            // get stages
+            const promptStage = document.getElementById('stagePrompt');
+            const envelopeStage = document.getElementById('stageEnvelope');
+            const paperStage = document.getElementById('stagePaper');
+            const envelopeClick = document.getElementById('envelopeClick');
+
+            // ensure start: only prompt visible
+            promptStage.classList.remove('hidden');
+            envelopeStage.classList.add('hidden');
+            paperStage.classList.add('hidden');
+
+            // 1) click on prompt -> hide prompt, show envelope
+            promptStage.addEventListener('click', function() {
+                promptStage.classList.add('hidden');
+                envelopeStage.classList.remove('hidden');
+            });
+
+            // 2) click on envelope -> hide envelope, show paper AND START MUSIC
+            envelopeClick.addEventListener('click', function() {
+                envelopeStage.classList.add('hidden');
+                paperStage.classList.remove('hidden');
+                startBackgroundMusic();
+            });
+
+            // also allow clicking on envelope label to trigger
+            const envelopeContainer = envelopeStage;
+            envelopeContainer.addEventListener('click', function(e) {
+                if (e.target.closest('.envelope-icon') || e.target.closest('.envelope-label')) {
+                    if (!envelopeStage.classList.contains('hidden')) {
+                        envelopeStage.classList.add('hidden');
+                        paperStage.classList.remove('hidden');
+                        startBackgroundMusic();
+                    }
+                }
+            });
+        })();
+    </script>
+
+    <!-- The YouTube link is already set to: https://youtu.be/XfkffghZsTM?si=v8gvHUee12z_abZ3 -->
+    <!-- Just copy and paste both files and it's ready to go! -->
+</body>
+</html>

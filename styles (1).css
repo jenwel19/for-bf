@@ -1,0 +1,313 @@
+/* styles.css - complete separate CSS file for maroon themed love letter */
+
+/* === RESET & GLOBAL === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #2c1b1a; /* deep maroon shadow */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+    padding: 16px;
+}
+
+/* main envelope container */
+.love-letter {
+    max-width: 760px;
+    width: 100%;
+    background: transparent;
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+/* === STAGE 1 – CLICK PROMPT (visible first) === */
+.click-prompt {
+    background: #571f1f; /* deep maroon base */
+    border-radius: 120px;
+    padding: 28px 42px;
+    box-shadow: 0 20px 28px -10px rgba(30, 10, 10, 0.7), 0 8px 0 #3a1515 inset, 0 -2px 0 #b57c7c inset;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), background 0.2s;
+    border: 2px solid #c58a8a;
+    text-align: center;
+    user-select: none;
+}
+
+.click-prompt:hover {
+    background: #6d2b2b;
+    transform: scale(1.02);
+    border-color: #e3b4b4;
+}
+
+.click-prompt:active {
+    transform: scale(0.98);
+    box-shadow: 0 12px 20px -10px #1f0c0c;
+}
+
+.prompt-text {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #fff7ed;
+    text-shadow: 0 4px 0 #3f1a1a, 2px 6px 10px #220707;
+    font-style: italic;
+    word-break: keep-all;
+}
+
+.prompt-sub {
+    font-size: 1.3rem;
+    color: #fad9d9;
+    margin-top: 8px;
+    font-weight: 300;
+    text-shadow: 0 2px 0 #411d1d;
+}
+
+/* === STAGE 2 – ENVELOPE (hidden until prompt clicked) === */
+.envelope-stage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: floatPop 0.5s cubic-bezier(0.21, 1.11, 0.38, 1.09);
+}
+
+.envelope-icon {
+    background: #812f2f; /* maroon red envelope */
+    width: 280px;
+    height: 200px;
+    border-radius: 30px 30px 18px 18px;
+    position: relative;
+    box-shadow: 0 26px 24px -14px #1d0d0d, 0 10px 0 #541f1f inset, 0 -6px 0 #be7b7b inset;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s;
+    border: 2px solid #bf8888;
+    margin-bottom: 28px;
+}
+
+.envelope-icon:before {
+    content: "";
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 70px solid #a04242; /* maroon flap */
+    filter: drop-shadow(0 -8px 4px #2d1212);
+    z-index: 2;
+}
+
+.envelope-icon:after {
+    content: "💌";
+    position: absolute;
+    font-size: 3.6rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    text-shadow: 2px 4px 8px #230a0a;
+}
+
+.envelope-icon:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 30px -12px #2d1212, 0 10px 0 #541f1f inset;
+}
+
+.envelope-label {
+    font-size: 2rem;
+    color: #fae1e1;
+    background: #682929cc;
+    backdrop-filter: blur(2px);
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-weight: 400;
+    border: 1px solid #bb7e7e;
+    box-shadow: 0 4px 0 #3b1919;
+    letter-spacing: 1px;
+}
+
+/* === STAGE 3 – THE PAPER (maroon theme + polaroids) === */
+.paper-stage {
+    width: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    animation: unfold 0.6s ease-out;
+}
+
+.message-paper {
+    background: #fef7f0; /* warm vintage paper */
+    width: 100%;
+    max-width: 720px;
+    border-radius: 32px 8px 32px 8px;
+    padding: 28px 24px 28px 20px;
+    box-shadow: 0 28px 40px -14px #140909, 0 0 0 2px #752525, 0 0 0 6px #a75858;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-left: 16px solid #702727; /* maroon accent border */
+    background: linear-gradient(145deg, #fffaf5 0%, #f5e7df 100%);
+    position: relative;
+}
+
+/* left side – polaroid row (3 pictures) */
+.polaroid-side {
+    flex: 1 1 220px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    background: #f1ddd9; /* soft maroonish base */
+    padding: 22px 12px;
+    border-radius: 42px 12px 42px 12px;
+    box-shadow: inset 0 0 0 2px #b06f6f, inset 0 0 0 5px #fae3e3;
+    background: #f3e2dd;
+}
+
+/* polaroid frame */
+.polaroid {
+    background: #f9f3ed;
+    padding: 12px 12px 28px 12px;
+    box-shadow: 0 12px 18px -10px #572a2a, 0 0 0 2px #b77c7c, 0 0 0 5px #f2d9d9;
+    transform: rotate(-1deg);
+    transition: transform 0.2s;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 6px 18px 6px 18px;
+}
+
+.polaroid:nth-child(2) {
+    transform: rotate(2deg) translateY(10px);
+}
+
+.polaroid:nth-child(3) {
+    transform: rotate(-3deg) translateY(4px);
+}
+
+.polaroid:hover {
+    transform: rotate(0deg) scale(1.03);
+    z-index: 10;
+}
+
+/* polaroid image style */
+.polaroid-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px 12px 4px 12px;
+    display: block;
+    background: #a75c5c; /* fallback maroon */
+    box-shadow: inset 0 0 0 2px #eacbcb;
+}
+
+.polaroid-caption {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #5f2c2c;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    background: #fcedeb;
+    width: 100%;
+    text-align: center;
+    padding: 4px 0;
+    border-radius: 20px;
+    border: 1px solid #d19797;
+}
+
+/* right side – message */
+.message-side {
+    flex: 2 1 280px;
+    background: #7c3a3a; /* maroon base for paper inside */
+    border-radius: 48px 12px 48px 12px;
+    padding: 32px 26px;
+    box-shadow: inset 0 0 0 4px #bc8080, inset 0 0 0 8px #eed2d2, 0 20px 28px -16px #2f0e0e;
+    background: #934b4b; /* rich maroon */
+    background-image: radial-gradient(circle at 10px 20px, #b56b6b 2px, transparent 2px), 
+        radial-gradient(circle at 30px 50px, #cf9f9f 3px, transparent 3px);
+    background-size: 40px 40px, 80px 80px;
+    border: 3px solid #f2c1c1;
+}
+
+.message-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #ffedea;
+    text-shadow: 0 2px 3px #381717;
+    font-weight: 400;
+    background: rgba(94, 35, 35, 0.4);
+    padding: 24px 18px;
+    border-radius: 40px 8px 40px 8px;
+    backdrop-filter: blur(1px);
+    border: 2px dashed #eabbab;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    word-break: break-word;
+}
+
+.message-text strong {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 18px;
+    color: #ffd9d9;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    border-bottom: 3px double #f3baba;
+    padding-bottom: 12px;
+}
+
+.message-text p {
+    margin-top: 12px;
+    font-size: 1.2rem;
+    color: #f7e4df;
+}
+
+.heart-sign {
+    text-align: right;
+    font-size: 2rem;
+    margin-top: 24px;
+    color: #ffc5c5;
+}
+
+/* hidden classes toggle */
+.hidden {
+    display: none !important;
+}
+
+/* animations */
+@keyframes floatPop {
+    0% { opacity: 0; transform: scale(0.7) translateY(30px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes unfold {
+    0% { opacity: 0; transform: rotateX(20deg) scale(0.8); }
+    100% { opacity: 1; transform: rotateX(0) scale(1); }
+}
+
+/* responsive */
+@media (max-width: 590px) {
+    .message-paper {
+        flex-direction: column;
+    }
+    .polaroid-side {
+        justify-content: center;
+    }
+    .prompt-text {
+        font-size: 1.8rem;
+    }
+}
